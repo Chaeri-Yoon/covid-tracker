@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import 'leaflet/dist/leaflet.css';
 
 const Container = styled.div`
-    width: 80%;
     height: 80vh;
 `;
 
@@ -23,7 +22,6 @@ function Map({ countryCovidData }: { countryCovidData: ICountryCovidData[] }) {
         if (country !== undefined) {
             const countryName = country?.country;
             const cases = country?.cases;
-
             layer.bindPopup(`${countryName}: ${cases}`);
             layer.options.fillOpacity = 1 - (rank / countryCovidData.length);
         }

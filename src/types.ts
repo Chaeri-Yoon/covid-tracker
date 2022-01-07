@@ -1,3 +1,8 @@
+export interface ITotalCovidData {
+    cases: number
+    todayCases: number
+    deaths: number
+}
 export interface ICountryCovidData {
     updated: number
     country: string
