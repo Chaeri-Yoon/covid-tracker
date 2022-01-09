@@ -72,8 +72,21 @@ function Map({ countryCovidData }: { countryCovidData: ICountryCovidData[] }) {
                     </CasesData>
                 </InfoContainer>
             );
-            layer.bindPopup(infoPopup);
             layer.options.fillOpacity = cases / population;
+            layer.on({
+                mouseover: (event: any) => {
+                    event.target.setStyle({
+                        weight: 3
+                    });
+                    layer.bindPopup(infoPopup).openPopup(event.latlng);
+                },
+                mouseout: (event: any) => {
+                    event.target.setStyle({
+                        weight: 0.3
+                    });
+                    layer.closePopup(infoPopup);
+                }
+            });
         }
         else layer.options.fillOpacity = 0;
     }
