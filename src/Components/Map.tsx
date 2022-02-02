@@ -2,28 +2,78 @@ import { MapContainer, GeoJSON } from 'react-leaflet';
 import mapdata from '../data/mapdata.json';
 import { ICountryCovidData } from '../types';
 import styled from 'styled-components';
+import ReactDOMServer from 'react-dom/server';
 import 'leaflet/dist/leaflet.css';
 
 const Container = styled.div`
     height: 80vh;
 `;
-
+const InfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const Country = styled.div`
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const Flag = styled.div`
+    margin-bottom: 3px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & img{
+        width: 90%;
+        height: 60%;
+        border: 1px solid black;
+    }
+`;
+const CountryName = styled.span`
+    font-size: 0.625em;
+`;
+const CasesData = styled.span`
+    font-size: 1em;
+`;
+const DataLabel = styled.span`
+    font-weight: 600;
+`;
+const Data = styled.span`
+    font-weight: 400;
+`;
 function Map({ countryCovidData }: { countryCovidData: ICountryCovidData[] }) {
     const onEachCountry = (feature: GeoJSON.Feature, layer: any) => {
         const isoName = feature.properties?.ISO_A3;
-        let rank: number = 0;
-        const country = countryCovidData.find((data, index) => {
-            if (data.countryInfo.iso3 === isoName) {
-                rank = index;
-                return true;
-            }
+        const country = countryCovidData.find(data => {
+            if (data.countryInfo.iso3 === isoName) return true;
         });
-
         if (country !== undefined) {
-            const countryName = country?.country;
-            const cases = country?.cases;
-            layer.bindPopup(`${countryName}: ${cases}`);
-            layer.options.fillOpacity = 1 - (rank / countryCovidData.length);
+            const countryName = country.country;
+            const population = country.population;
+            const cases = country.cases;
+            const todayCases = country.todayCases;
+            const flag = country.countryInfo.flag;
+            const infoPopup = ReactDOMServer.renderToString(
+                <InfoContainer>
+                    <Country>
+                        <Flag><img src={flag} alt={`flag of ${countryName}`} /></Flag>
+                        <CountryName>{countryName}</CountryName>
+                    </Country>
+                    <CasesData>
+                        <DataLabel>
+                            cases: <Data>{cases} </Data>
+                        </DataLabel>
+                        <DataLabel>
+                            (today: <Data>{todayCases}</Data>)
+                        </DataLabel>
+                    </CasesData>
+                </InfoContainer>
+            );
+            layer.bindPopup(infoPopup);
+            layer.options.fillOpacity = cases / population;
         }
         else layer.options.fillOpacity = 0;
     }

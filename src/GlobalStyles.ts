@@ -46,6 +46,13 @@ const GlobalStyle = createGlobalStyle`
 	}
 	body{
 		box-sizing: border-box;
+		width: 100%;
+		height: 100vh;
+		display: flex;
+		align-items: center;
+		& > div{
+			width: 100%;
+		}
 	}
 `;
 
