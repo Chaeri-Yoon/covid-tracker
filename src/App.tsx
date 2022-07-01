@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getCountryCovidData, getTotalCovidData } from './api';
 import { ICountryCovidData, ITotalCovidData } from './types';
 import styled from 'styled-components';
@@ -18,21 +18,24 @@ const DataContainer = styled.div`
   }
 `;
 function App() {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [countryCovidData, setCountryCovidData] = useState<ICountryCovidData[]>([]);
   const [totalCovidData, setTotalCovidData] = useState<ITotalCovidData>({ cases: 0, todayCases: 0, deaths: 0 });
 
-  if (isLoading) {
-    Promise.all([getCountryCovidData, getTotalCovidData]).then(
-      values => {
-        setLoading(false);
-        const { data } = values[0];
-        const { data: { cases, todayCases, deaths } } = values[1];
-        setCountryCovidData(data);
-        setTotalCovidData({ cases, todayCases, deaths });
-      }
-    );
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(true);
+      Promise.all([getCountryCovidData, getTotalCovidData]).then(
+        values => {
+          setLoading(false);
+          const { data } = values[0];
+          const { data: { cases, todayCases, deaths } } = values[1];
+          setCountryCovidData(data);
+          setTotalCovidData({ cases, todayCases, deaths });
+        }
+      );
+    }
+  }, []);
   return (
     <>
       <GlobalStyles />

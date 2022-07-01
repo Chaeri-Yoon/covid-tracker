@@ -28,8 +28,7 @@ const Flag = styled.div`
     align-items: center;
     & img{
         width: 90%;
-        height: 60%;
-        border: 1px solid black;
+        aspect-ratio: 3 / 2;
     }
 `;
 const CountryName = styled.span`
@@ -64,10 +63,10 @@ function Map({ countryCovidData }: { countryCovidData: ICountryCovidData[] }) {
                     </Country>
                     <CasesData>
                         <DataLabel>
-                            cases: <Data>{cases} </Data>
+                            cases: <Data>{cases.toLocaleString()} </Data>
                         </DataLabel>
                         <DataLabel>
-                            (today: <Data>{todayCases}</Data>)
+                            (today: <Data>{todayCases.toLocaleString()}</Data>)
                         </DataLabel>
                     </CasesData>
                 </InfoContainer>
@@ -92,7 +91,7 @@ function Map({ countryCovidData }: { countryCovidData: ICountryCovidData[] }) {
     }
     return (
         <Container>
-            <MapContainer style={{ width: '100%', height: '100%' }} center={[0, 0]} zoom={2} scrollWheelZoom={false}>
+            <MapContainer style={{ width: '100%', height: '100%' }} center={[0, 0]} zoom={2} scrollWheelZoom={false} >
                 <GeoJSON style={{ fillColor: "red", weight: 0.3 }} data={(mapdata as any).features} onEachFeature={onEachCountry}></GeoJSON>
             </MapContainer>
         </Container>

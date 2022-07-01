@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Counter from "../libs/Counter";
 import { ITotalCovidData } from "../types";
 
 const Container = styled.div`
@@ -27,24 +28,25 @@ const Data = styled.span`
     font-weight: 600;
 `;
 function WorldData({ totalCovidData }: { totalCovidData: ITotalCovidData }) {
+    const count = Counter(totalCovidData);
     return (
         <Container>
             <Column>
                 <div>
                     <DataLabel>Total Cases</DataLabel>
-                    <Data>{totalCovidData.cases}</Data>
+                    <Data>{count?.count_case?.toLocaleString() || 0}</Data>
                 </div>
             </Column>
             <Column>
                 <div>
                     <DataLabel>Today Cases</DataLabel>
-                    <Data>{totalCovidData.todayCases}</Data>
+                    <Data>{count?.count_todayCase?.toLocaleString() || 0}</Data>
                 </div>
             </Column>
             <Column>
                 <div>
                     <DataLabel>Deaths</DataLabel>
-                    <Data>{totalCovidData.deaths}</Data>
+                    <Data>{count?.count_death?.toLocaleString() || 0}</Data>
                 </div>
             </Column>
         </Container>
